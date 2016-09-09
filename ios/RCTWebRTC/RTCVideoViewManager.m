@@ -6,6 +6,7 @@
 //  Copyright © 2015年 Facebook. All rights reserved.
 //
 
+#import "objc/runtime.h"
 #import "RTCVideoViewManager.h"
 #import "RTCEAGLVideoView.h"
 #import "RTCVideoTrack.h"
