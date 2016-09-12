@@ -15,6 +15,8 @@
 		35A222701CB493C00015FD5C /* WebRTCModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A222451CB493C00015FD5C /* WebRTCModule.m */; };
 		35EC07E61CB73DFE00F3D79C /* RCTConvert+WebRTC.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EC07E51CB73DFE00F3D79C /* RCTConvert+WebRTC.m */; };
 		35EC083A1CB9AEE900F3D79C /* WebRTCModule+RTCDataChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EC08391CB9AEE900F3D79C /* WebRTCModule+RTCDataChannel.m */; };
+		66ABE81E1D8752ED00FA364E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ABE81D1D8752ED00FA364E /* Reachability.m */; };
+		66ABE8211D8752FF00FA364E /* NetworkConnectionReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ABE8201D8752FF00FA364E /* NetworkConnectionReceiver.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,6 +79,19 @@
 		35EC07E51CB73DFE00F3D79C /* RCTConvert+WebRTC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTConvert+WebRTC.m"; sourceTree = "<group>"; };
 		35EC08381CB9AEC400F3D79C /* WebRTCModule+RTCDataChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebRTCModule+RTCDataChannel.h"; sourceTree = "<group>"; };
 		35EC08391CB9AEE900F3D79C /* WebRTCModule+RTCDataChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WebRTCModule+RTCDataChannel.m"; sourceTree = "<group>"; };
+		66ABE8131D8752D300FA364E /* CoreTelephony.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTelephony.h; sourceTree = "<group>"; };
+		66ABE8141D8752D300FA364E /* CTCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTCall.h; sourceTree = "<group>"; };
+		66ABE8151D8752D300FA364E /* CTCellularDataPlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTCellularDataPlan.h; sourceTree = "<group>"; };
+		66ABE8161D8752D300FA364E /* CTIndicators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTIndicators.h; sourceTree = "<group>"; };
+		66ABE8171D8752D300FA364E /* CTRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTRegistration.h; sourceTree = "<group>"; };
+		66ABE8181D8752D300FA364E /* CTServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTServerConnection.h; sourceTree = "<group>"; };
+		66ABE8191D8752D300FA364E /* CTSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTSetting.h; sourceTree = "<group>"; };
+		66ABE81A1D8752D300FA364E /* CTSIMSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTSIMSupport.h; sourceTree = "<group>"; };
+		66ABE81B1D8752D300FA364E /* CTTelephonyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTelephonyCenter.h; sourceTree = "<group>"; };
+		66ABE81C1D8752ED00FA364E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		66ABE81D1D8752ED00FA364E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		66ABE81F1D8752FF00FA364E /* NetworkConnectionReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkConnectionReceiver.h; sourceTree = "<group>"; };
+		66ABE8201D8752FF00FA364E /* NetworkConnectionReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkConnectionReceiver.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +125,11 @@
 		35A222311CB493C00015FD5C /* RCTWebRTC */ = {
 			isa = PBXGroup;
 			children = (
+				66ABE8121D87529F00FA364E /* CellStrength */,
+				66ABE81C1D8752ED00FA364E /* Reachability.h */,
+				66ABE81D1D8752ED00FA364E /* Reachability.m */,
+				66ABE81F1D8752FF00FA364E /* NetworkConnectionReceiver.h */,
+				66ABE8201D8752FF00FA364E /* NetworkConnectionReceiver.m */,
 				35EC07E41CB73DBA00F3D79C /* RCTConvert+WebRTC.h */,
 				35EC07E51CB73DFE00F3D79C /* RCTConvert+WebRTC.m */,
 				35A222321CB493C00015FD5C /* RTCPeerConnection+Block.h */,
@@ -175,6 +195,22 @@
 			path = Headers;
 			sourceTree = "<group>";
 		};
+		66ABE8121D87529F00FA364E /* CellStrength */ = {
+			isa = PBXGroup;
+			children = (
+				66ABE8131D8752D300FA364E /* CoreTelephony.h */,
+				66ABE8141D8752D300FA364E /* CTCall.h */,
+				66ABE8151D8752D300FA364E /* CTCellularDataPlan.h */,
+				66ABE8161D8752D300FA364E /* CTIndicators.h */,
+				66ABE8171D8752D300FA364E /* CTRegistration.h */,
+				66ABE8181D8752D300FA364E /* CTServerConnection.h */,
+				66ABE8191D8752D300FA364E /* CTSetting.h */,
+				66ABE81A1D8752D300FA364E /* CTSIMSupport.h */,
+				66ABE81B1D8752D300FA364E /* CTTelephonyCenter.h */,
+			);
+			name = CellStrength;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -233,10 +269,12 @@
 				35A2226D1CB493C00015FD5C /* WebRTCModule+RTCPeerConnection.m in Sources */,
 				35A2226C1CB493C00015FD5C /* WebRTCModule+RTCMediaStream.m in Sources */,
 				35A222701CB493C00015FD5C /* WebRTCModule.m in Sources */,
+				66ABE8211D8752FF00FA364E /* NetworkConnectionReceiver.m in Sources */,
 				35EC07E61CB73DFE00F3D79C /* RCTConvert+WebRTC.m in Sources */,
 				35EC083A1CB9AEE900F3D79C /* WebRTCModule+RTCDataChannel.m in Sources */,
 				35A222681CB493C00015FD5C /* RTCPeerConnectionDelegator.m in Sources */,
 				35A222691CB493C00015FD5C /* RTCVideoViewManager.m in Sources */,
+				66ABE81E1D8752ED00FA364E /* Reachability.m in Sources */,
 				35A222671CB493C00015FD5C /* RTCPeerConnection+Block.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
