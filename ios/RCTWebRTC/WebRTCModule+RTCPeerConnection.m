@@ -719,19 +719,19 @@ RCT_EXPORT_METHOD(stopConnectivityMonitoring)
     [self getConnectivityType];
 }
 
--(void) endTheCall
-{
-    if (!self.onConnectionTypeChanged) {
-        return;
-    }
-    
-    BOOL hasChanged = YES;
-    self.onConnectionTypeChanged(@{
-                                   @"connectionStatus": @{
-                                           @"connectionHasChanged": @(hasChanged),
-                                           }
-                                   });
-}
+//-(void) endTheCall
+//{
+//    if (!self.onConnectionTypeChanged) {
+//        return;
+//    }
+//    
+//    BOOL hasChanged = YES;
+//    self.onConnectionTypeChanged(@{
+//                                   @"connectionStatus": @{
+//                                           @"connectionHasChanged": @(hasChanged),
+//                                           }
+//                                   });
+//}
 
 -(void) endTheCallEvent
 {
