@@ -19,43 +19,45 @@
 #import "WebRTCModule+RTCPeerConnection.h"
 
 #import "RTCPeerConnection.h"
+#import "NetworkConnectionReceiver.h"
+#import "RTCSessionDescription.h"
 
 @implementation RTCMediaStream (React)
 - (NSNumber *)reactTag {
-  return objc_getAssociatedObject(self, _cmd);
+    return objc_getAssociatedObject(self, _cmd);
 }
 - (void)setReactTag:(NSNumber *)reactTag {
-  objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end
 
 @implementation RTCVideoTrack (React)
 - (NSNumber *)reactTag{
-  return objc_getAssociatedObject(self, _cmd);
+    return objc_getAssociatedObject(self, _cmd);
 }
 - (void)setReactTag:(NSNumber *)reactTag {
-  objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end
 
 @implementation RTCAudioTrack (React)
 - (NSNumber *)reactTag {
-  return objc_getAssociatedObject(self, _cmd);
+    return objc_getAssociatedObject(self, _cmd);
 }
 - (void)setReactTag:(NSNumber *)reactTag {
-  objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(reactTag), reactTag, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end
 
 @implementation AVCaptureDevice (React)
 
 - (NSString*)positionString {
-  switch (self.position) {
-    case AVCaptureDevicePositionUnspecified: return @"unspecified";
-    case AVCaptureDevicePositionBack: return @"back";
-    case AVCaptureDevicePositionFront: return @"front";
-  }
-  return nil;
+    switch (self.position) {
+        case AVCaptureDevicePositionUnspecified: return @"unspecified";
+        case AVCaptureDevicePositionBack: return @"back";
+        case AVCaptureDevicePositionFront: return @"front";
+    }
+    return nil;
 }
 
 @end
