@@ -188,6 +188,8 @@ RCT_EXPORT_METHOD(peerConnectionAddICECandidate:(NSDictionary*)candidateJSON obj
   BOOL result = [peerConnection addICECandidate:candidate];
   NSLog(@"addICECandidateresult:%i, %@", result, candidate);
   callback(@[@(result)]);
+  NSError *error;
+  [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
 }
 
 RCT_EXPORT_METHOD(peerConnectionClose:(nonnull NSNumber *)objectID)
