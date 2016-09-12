@@ -63,7 +63,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     public final SparseArray<MediaStreamTrack> mMediaStreamTracks;
     private final SparseArray<DataChannel> mDataChannels;
     private MediaConstraints pcConstraints = new MediaConstraints();
-    VideoSource videoSource;
+    private VideoSource videoSource;
+    private VideoCapturerAndroid currentVideoCapturerAndroid;
 
     public WebRTCModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -301,6 +302,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
                             }
                         });
+                        this.currentVideoCapturerAndroid = v;
                         videoSource = mFactory.createVideoSource(v, videoConstraints);
                     }
                     break;
@@ -313,7 +315,9 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
                                 if (options.getType(i) == ReadableType.Map) {
                                     ReadableMap option = options.getMap(i);
                                     if (option.hasKey("sourceId") && option.getType("sourceId") == ReadableType.String) {
-                                        videoSource = mFactory.createVideoSource(getVideoCapturerById(Integer.parseInt(option.getString("sourceId"))), videoConstraints);
+                                        VideoCapturerAndroid v = getVideoCapturerById(Integer.parseInt(option.getString("sourceId")));
+                                        this.currentVideoCapturerAndroid = v;
+                                        videoSource = mFactory.createVideoSource(v, videoConstraints);
                                     }
                                 }
                             }
@@ -472,7 +476,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         return params;
     }
 
-    private VideoCapturer getVideoCapturerById(int id) {
+    private VideoCapturerAndroid getVideoCapturerById(int id) {
         String name = CameraEnumerationAndroid.getDeviceName(id);
         if (name == null) {
             name = CameraEnumerationAndroid.getNameOfFrontFacingDevice();
@@ -522,6 +526,154 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
             Log.d(TAG, "peerConnectionRemoveStream() peerConnection is null");
         }
     }
+
+    @ReactMethod
+    public void switchCameras() {
+        this.currentVideoCapturerAndroid.switchCamera(new VideoCapturerAndroid.CameraSwitchHandler() {
+            @Override
+            public void onCameraSwitchDone(boolean b) {
+                Log.d("SWITCHCAMERA", "Successfully Switched Cameras");
+            }
+
+            @Override
+            public void onCameraSwitchError(String s) {
+                Log.d("SWITCHCAMERA", "There was an error switching cameras");
+            }
+        });
+    }
+
+    @ReactMethod
+    public void toggleMute() {
+        Log.d("INTOGGLEMUTE", mMediaStreams.get(1).toString());
+        MediaStream mediaStream = mMediaStreams.get(1);
+        LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
+        for (AudioTrack aAudioTrack : audioTracks) {
+            if (aAudioTrack.enabled()) {
+                aAudioTrack.setEnabled(false);
+            } else {
+                aAudioTrack.setEnabled(true);
+            }
+        }
+    }
+
+    @ReactMethod
+    public void toggleCamera() {
+        Log.d("INTOGGLECAMERA", mMediaStreams.get(1).toString());
+        MediaStream mediaStream = mMediaStreams.get(1);
+        LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
+        boolean isCameraEnabled = false;
+        for (VideoTrack aVideoTrack : videoTracks) {
+            if (aVideoTrack.enabled()) {
+                aVideoTrack.setEnabled(false);
+            } else {
+                aVideoTrack.setEnabled(true);
+            }
+        }
+    }
+
+    /*public static void testChangeBandwidthResolution(int bandWidth) {
+
+        if (mPeerConnections != null) {
+            final PeerConnection peerConnection = mPeerConnections.get(0);
+
+            if (peerConnection != null) {
+
+                SessionDescription oldLocalDescription = peerConnection.getLocalDescription();
+                SessionDescription oldRemoteDescription = peerConnection.getRemoteDescription();
+
+                StringBuilder sbLocal = null;
+                StringBuilder sbRemote = null;
+                if (oldLocalDescription != null) {
+                    String stringOldLocalDescription = oldLocalDescription.description;
+                    sbLocal = new StringBuilder(stringOldLocalDescription);
+                    int indexOfLocalVideo = sbLocal.indexOf("m=video");
+                    int indexOfLocalFirstA = sbLocal.indexOf("a=rtcp", indexOfLocalVideo);
+
+                    if (!stringOldLocalDescription.contains("b=AS")) {
+                        sbLocal.insert(indexOfLocalFirstA, "b=AS:" + bandWidth + "\n"
+                                + "b=RS:800 \n"
+                                + "b=RR:2400 \n");
+                    }
+                }
+
+                if (oldRemoteDescription != null) {
+                    Log.d("OLD_REMOTE_SDP", oldRemoteDescription.description);
+                    String stringOldRemoteDescription = oldRemoteDescription.description;
+                    sbRemote = new StringBuilder(stringOldRemoteDescription);
+                    int indexOfRemoteVideo = sbRemote.indexOf("m=video");
+                    int indexOfRemoteFirstA = sbRemote.indexOf("a=rtcp", indexOfRemoteVideo);
+
+                    if (!stringOldRemoteDescription.contains("b=AS")) {
+                        sbRemote.insert(indexOfRemoteFirstA, "b=AS:" + bandWidth + "\n"
+                                + "b=RS:800 \n"
+                                + "b=RR:2400 \n");
+                    }
+                }
+
+                if (sbLocal != null && sbRemote != null) {
+                    final SessionDescription newLocalDescription = new SessionDescription(SessionDescription.Type.OFFER, sbLocal.toString());
+                    final SessionDescription newRemoteDescription = new SessionDescription(SessionDescription.Type.ANSWER, sbRemote.toString());
+
+                    peerConnection.setLocalDescription(new SdpObserver() {
+                        @Override
+                        public void onCreateSuccess(SessionDescription sessionDescription) {
+
+                        }
+
+                        @Override
+                        public void onSetSuccess() {
+                            Log.d("NEW_AFTER_LOCAL_SDP", newLocalDescription.description);
+                            peerConnection.setRemoteDescription(new SdpObserver() {
+                                @Override
+                                public void onCreateSuccess(SessionDescription sessionDescription) {
+
+                                }
+
+                                @Override
+                                public void onSetSuccess() {
+                                    Log.d("NEW_AFTER_REMOTE_SDP", newRemoteDescription.description);
+                                }
+
+                                @Override
+                                public void onCreateFailure(String s) {
+
+                                }
+
+                                @Override
+                                public void onSetFailure(String s) {
+
+                                }
+                            }, newRemoteDescription);
+                        }
+
+                        @Override
+                        public void onCreateFailure(String s) {
+
+                        }
+
+                        @Override
+                        public void onSetFailure(String s) {
+
+                        }
+                    }, newLocalDescription);
+
+                }
+            }
+        }
+        *//*MediaConstraints mediaConstraints = new MediaConstraints();
+
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("audio",Boolean.toString(Boolean.TRUE)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minHeight", Integer.toString(240)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxHeight", Integer.toString(1080)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minWidth", Integer.toString(426)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxWidth", Integer.toString(1920)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minFrameRate", Integer.toString(30)));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxFrameRate", Integer.toString(30)));
+
+        peerConnection.createOffer();*//*
+    }*/
+
+
 
     @ReactMethod
     public void peerConnectionCreateOffer(final int id, final Callback callback) {
@@ -898,3 +1050,4 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         return null;
     }
 }
+
