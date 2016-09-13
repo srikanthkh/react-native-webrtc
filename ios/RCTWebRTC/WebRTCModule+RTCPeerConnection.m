@@ -59,17 +59,11 @@
 
 @implementation WebRTCModule (RTCPeerConnection)
 
-RCT_EXPORT_MODULE();
-RCT_EXPORT_VIEW_PROPERTY(onConnectionTypeChanged, RCTBubblingEventBlock);
-
 NSString *localSdp;
 NSString *remoteSdp;
 NSString *localSdpType;
 NSString *remoteSdpType;
 NSString *REMOTE_SDP_TYPE;
-
-//NSArray *localSdpArray;
-//NSArray *remoteSdpArray;
 NSTimer *timer;
 
 const int MAX_NETWORK_BAR_STRENGTH = 5;
@@ -198,17 +192,6 @@ RCT_EXPORT_METHOD(peerConnectionSetLocalDescription:(NSDictionary *)sdpJSON obje
     localSdp = sdp.description;
     localSdpType = sdp.type;
     
-    //    if (localSdpArray.count > 0) {
-    //        [localSdpArray removeal];
-    //    }
-    
-    //    if ([localSdp containsString:@"m=video"]) {
-    //        localSdpArray = [localSdp componentsSeparatedByString:@"\n"];
-    ////        for (NSString *aString in localSdpArray) {
-    ////            NSLog(@"--------- %@",aString);
-    ////        }
-    //    }
-    
     [peerConnection setLocalDescriptionWithCallback:^(NSError *error) {
         if (error) {
             id errorResponse = @{@"name": @"SetLocalDescriptionFailed",
@@ -226,17 +209,6 @@ RCT_EXPORT_METHOD(peerConnectionSetRemoteDescription:(NSDictionary *)sdpJSON obj
     remoteSdp = sdp.description;
     remoteSdpType = sdp.type;
     REMOTE_SDP_TYPE = sdp.type;
-    
-    //    if (remoteSdpArray.count > 0) {
-    //        [remoteSdpArray removeAllObjects];
-    //    }
-    
-    //    if ([remoteSdp containsString:@"m=video"]) {
-    //        remoteSdpArray = [remoteSdp componentsSeparatedByString:@"\n"];
-    //        for (NSString *aString in remoteSdpArray) {
-    //            NSLog(@"--------- %@",aString);
-    //        }
-    //    }
     
     RTCPeerConnection *peerConnection = self.peerConnections[objectID];
     if (!peerConnection) {
@@ -460,56 +432,6 @@ RCT_EXPORT_METHOD(peerConnectionGetStats:(nonnull NSNumber *)trackID objectID:(n
 
 // PRAGMA MARK: - Video Adjustment -
 
-//WebRTCModule *thisInstance;
-
-//RCT_EXPORT_METHOD(startObservingNetworkSignalStrength)
-//{
-////    thisInstance = self;
-////
-////    CTTelephonyCenterAddObserver(CTTelephonyCenterGetDefault(), NULL, SignalStrengthDidChange, kCTIndicatorsSignalStrengthNotification, NULL, CFNotificationSuspensionBehaviorCoalesce);
-////
-//////    dispatch_async (dispatch_get_main_queue(), ^{
-//////        CFRunLoopRun();
-//////    });
-////
-////    CFRunLoopRun();
-//
-//}
-//
-//RCT_EXPORT_METHOD(removeObservingNetworkSignalStrength)
-//{
-////    CTTelephonyCenterRemoveEveryObserver(CTTelephonyCenterGetDefault(), NULL);
-//}
-
-//void SignalStrengthDidChange(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-//{
-//    long int raw = 0;
-//    long int graded = 0;
-//    long int bars = 0;
-//
-//    CTIndicatorsGetSignalStrength(&raw, &graded, &bars);
-//
-//    printf("Signal strength changed! Raw: %li, graded: %li bars: %li\n", raw, graded, bars);
-//    // Prints something like:
-//    // Signal strength changed! Raw: -96, graded: 27 bars: 3
-//
-//    //[thisInstance changeBandWidthByBars:bars];
-//}
-
-//RCT_EXPORT_METHOD(startConnectivityMonitoring)
-//{
-//    // 1. check wether connection type is Wifi or not
-//    NetworkConnectionReceiver *ncr = [[NetworkConnectionReceiver alloc] init];
-//    NSString *connectivityType = [ncr getConnectivityType];
-//
-//    if ([connectivityType isEqualToString:@"WIFI"]) {
-//        [self startTimerForCellularSignalStrengthMonitoring];
-//    } else {
-//
-//    }
-//}
-
-
 RCT_EXPORT_METHOD(startConnectivityMonitoring)
 {
     NSLog(@"startConnectivityMonitoring method...");
@@ -724,22 +646,22 @@ RCT_EXPORT_METHOD(stopConnectivityMonitoring)
 //    if (!self.onConnectionTypeChanged) {
 //        return;
 //    }
-//    
+//
 //    BOOL hasChanged = YES;
 //    self.onConnectionTypeChanged(@{
-//                                   @"connectionStatus": @{
-//                                           @"connectionHasChanged": @(hasChanged),
-//                                           }
-//                                   });
+//        @"connectionStatus": @{
+//            @"connectionHasChanged": @(hasChanged),
+//        }
+//    });
 //}
-
--(void) endTheCallEvent
-{
-    NSString *eventName = @"endTheCallEvent";
-    
-    [self.bridge.eventDispatcher sendDeviceEventWithName:@"connectionTypeChangedEvent" body:
-     @{@"name": eventName}];
-}
+//
+//-(void) endTheCallEvent
+//{
+//    NSString *eventName = @"endTheCallEvent";
+//
+//    [self.bridge.eventDispatcher sendDeviceEventWithName:@"connectionTypeChangedEvent" body:
+//     @{@"name": eventName}];
+//}
 
 
 // PRAGMA MARK: - Wifi Connection -
