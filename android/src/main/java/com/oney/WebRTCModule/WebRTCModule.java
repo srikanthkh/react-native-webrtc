@@ -613,10 +613,10 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         return microphoneStatus;
     }
 
-    /*public static void testChangeBandwidthResolution(int bandWidth) {
+    public static void changeBandwidthResolution(int bandWidth) {
 
-        if (mPeerConnections != null) {
-            final PeerConnection peerConnection = mPeerConnections.get(0);
+        if (WebRTCModule.mPeerConnections != null) {
+            final PeerConnection peerConnection = WebRTCModule.mPeerConnections.get(0);
 
             if (peerConnection != null) {
 
@@ -633,8 +633,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
                     if (!stringOldLocalDescription.contains("b=AS")) {
                         sbLocal.insert(indexOfLocalFirstA, "b=AS:" + bandWidth + "\n"
-                                + "b=RS:800 \n"
-                                + "b=RR:2400 \n");
+                                + "b=RS:"+bandWidth+"\n"
+                                + "b=RR:"+bandWidth+"\n");
                     }
                 }
 
@@ -647,8 +647,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
                     if (!stringOldRemoteDescription.contains("b=AS")) {
                         sbRemote.insert(indexOfRemoteFirstA, "b=AS:" + bandWidth + "\n"
-                                + "b=RS:800 \n"
-                                + "b=RR:2400 \n");
+                                + "b=RS:"+bandWidth+"\n"
+                                + "b=RR:"+bandWidth+"\n");
                     }
                 }
 
@@ -702,18 +702,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
                 }
             }
         }
-        *//*MediaConstraints mediaConstraints = new MediaConstraints();
-
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("audio",Boolean.toString(Boolean.TRUE)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minHeight", Integer.toString(240)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxHeight", Integer.toString(1080)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minWidth", Integer.toString(426)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxWidth", Integer.toString(1920)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("minFrameRate", Integer.toString(30)));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("maxFrameRate", Integer.toString(30)));
-
-        peerConnection.createOffer();*//*
-    }*/
+    }
 
 
 
