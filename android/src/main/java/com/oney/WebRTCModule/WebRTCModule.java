@@ -571,6 +571,48 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         }
     }
 
+
+    @ReactMethod
+    public String getDeviceCameraAccessibility() {
+        String cameraStatus = new String("cameraStatus_Authorized");
+        Camera camera = null;
+        try {
+            camera = Camera.open();
+        } catch (RuntimeException e) {
+            cameraStatus = "denied";
+        } finally {
+            if (camera != null) camera.release();
+        }
+        return cameraStatus;
+    }
+
+    @ReactMethod
+    public String getDeviceMicrophoneAccessibility() {
+        String microphoneStatus = new String("microphoneStatus_Authorized");
+        AudioRecord recorder =new AudioRecord(
+                MediaRecorder.AudioSource.MIC, 44100,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_DEFAULT, 44100);
+        try {
+            if (recorder.getRecordingState() != AudioRecord.RECORDSTATE_STOPPED) {
+                microphoneStatus = "denied";
+
+            }
+
+            recorder.startRecording();
+            if (recorder.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
+                recorder.stop();
+                microphoneStatus = "denied";
+
+            }
+            recorder.stop();
+        } finally {
+            recorder.release();
+            recorder = null;
+        }
+        return microphoneStatus;
+    }
+
     /*public static void testChangeBandwidthResolution(int bandWidth) {
 
         if (mPeerConnections != null) {
