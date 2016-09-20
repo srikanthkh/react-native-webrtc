@@ -704,7 +704,22 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void setSignalStrengthListener(){
+        this.tManager = (TelephonyManager) this.getCurrentActivity().getSystemService(TELEPHONY_SERVICE);
+        this.customPhoneStateListener = new CustomPhoneStateListener(this.getReactApplicationContext());
+        tManager.listen(this.customPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        this.customPhoneStateListener.myTimer.scheduleAtFixedRate(this.customPhoneStateListener.myTimerTask, 0, 5000);
+    }
 
+    @ReactMethod
+    public void removeSignalStrengthListener(){
+        this.tManager = (TelephonyManager) this.getCurrentActivity().getSystemService(TELEPHONY_SERVICE);
+        tManager.listen(this.customPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        this.customPhoneStateListener.myTimerTask.cancel();
+        this.customPhoneStateListener.myTimer.cancel();
+        this.customPhoneStateListener.myTimer.purge();
+    }
 
     @ReactMethod
     public void peerConnectionCreateOffer(final int id, final Callback callback) {
