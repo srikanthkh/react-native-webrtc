@@ -2,6 +2,10 @@ package com.oney.WebRTCModule;
 
 import android.app.Application;
 
+import android.content.pm.ActivityInfo;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -33,6 +37,8 @@ import java.util.Map;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.hardware.Camera;
@@ -49,7 +55,10 @@ import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 
+
 import org.webrtc.*;
+
+import static android.content.Context.TELEPHONY_SERVICE;
 
 public class WebRTCModule extends ReactContextBaseJavaModule {
     private final static String TAG = WebRTCModule.class.getCanonicalName();
@@ -58,13 +67,15 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     private PeerConnectionFactory mFactory;
     private int mMediaStreamId = 0;
     private int mMediaStreamTrackId = 0;
-    private final SparseArray<PeerConnection> mPeerConnections;
+    private static SparseArray<PeerConnection> mPeerConnections;
     public final SparseArray<MediaStream> mMediaStreams;
     public final SparseArray<MediaStreamTrack> mMediaStreamTracks;
     private final SparseArray<DataChannel> mDataChannels;
     private MediaConstraints pcConstraints = new MediaConstraints();
     private VideoSource videoSource;
     private VideoCapturerAndroid currentVideoCapturerAndroid;
+    private TelephonyManager tManager;
+    private CustomPhoneStateListener customPhoneStateListener;
 
     public WebRTCModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -107,8 +118,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     }
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         getReactApplicationContext()
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
     private List<PeerConnection.IceServer> createIceServers(ReadableArray iceServersArray) {
@@ -613,6 +624,43 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         return microphoneStatus;
     }
 
+    @ReactMethod
+    public void releaseCameraAndMicroPhone() {
+
+        if (mMediaStreams != null) {
+            while (mMediaStreamId >= 0) {
+                MediaStream mediaStream = mMediaStreams.get(mMediaStreamId);
+                LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
+                LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
+
+                if (videoTracks != null) {
+                    for (VideoTrack v : videoTracks) {
+                        int trackIndex = mMediaStreamTracks.indexOfValue(v);
+                        v.dispose();
+                        mMediaStreamTracks.remove(trackIndex);
+                        mediaStream.removeTrack(v);
+                    }
+                }
+                if (audioTracks != null) {
+                    for (AudioTrack a : audioTracks) {
+                        int trackIndex = mMediaStreamTracks.indexOfValue(a);
+                        a.dispose();
+                        mMediaStreamTracks.remove(trackIndex);
+                        mediaStream.removeTrack(a);
+                    }
+                }
+            }
+        }
+
+
+        for (int i = 0; i < mPeerConnections.size(); i++) {
+            int index = mPeerConnections.keyAt(i);
+            PeerConnection p = mPeerConnections.valueAt(index);
+            p.dispose();
+        }
+    }
+
+
     public static void changeBandwidthResolution(int bandWidth) {
 
         if (WebRTCModule.mPeerConnections != null) {
@@ -803,8 +851,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         Log.d(TAG, "peerConnectionSetLocalDescription() start");
         if (peerConnection != null) {
             SessionDescription sdp = new SessionDescription(
-                SessionDescription.Type.fromCanonicalForm(sdpMap.getString("type")),
-                sdpMap.getString("sdp")
+                    SessionDescription.Type.fromCanonicalForm(sdpMap.getString("type")),
+                    sdpMap.getString("sdp")
             );
 
             peerConnection.setLocalDescription(new SdpObserver() {
@@ -840,8 +888,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         Log.d(TAG, "peerConnectionSetRemoteDescription() start");
         if (peerConnection != null) {
             SessionDescription sdp = new SessionDescription(
-                SessionDescription.Type.fromCanonicalForm(sdpMap.getString("type")),
-                sdpMap.getString("sdp")
+                    SessionDescription.Type.fromCanonicalForm(sdpMap.getString("type")),
+                    sdpMap.getString("sdp")
             );
 
             peerConnection.setRemoteDescription(new SdpObserver() {
@@ -876,9 +924,9 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         Log.d(TAG, "peerConnectionAddICECandidate() start");
         if (peerConnection != null) {
             IceCandidate candidate = new IceCandidate(
-                candidateMap.getString("sdpMid"),
-                candidateMap.getInt("sdpMLineIndex"),
-                candidateMap.getString("candidate")
+                    candidateMap.getString("sdpMid"),
+                    candidateMap.getInt("sdpMLineIndex"),
+                    candidateMap.getString("candidate")
             );
             result = peerConnection.addIceCandidate(candidate);
         } else {
@@ -1096,4 +1144,3 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         return null;
     }
 }
-
