@@ -1,8 +1,10 @@
 package com.oney.WebRTCModule;
 
+import android.Manifest;
 import android.app.Application;
 
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -37,6 +39,7 @@ import java.util.Map;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 
+import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
@@ -584,7 +587,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public String getDeviceCameraAccessibilityOLD() {
+    public String getDeviceCameraAccessibilityOld() {
         String cameraStatus = new String("cameraStatus_Authorized");
         Camera camera = null;
         try {
@@ -598,7 +601,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public String getDeviceMicrophoneAccessibilityOLD() {
+    public String getDeviceMicrophoneAccessibilityOld() {
         String microphoneStatus = new String("microphoneStatus_Authorized");
         AudioRecord recorder =new AudioRecord(
                 MediaRecorder.AudioSource.MIC, 44100,
@@ -640,7 +643,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
         return returnValue;
     }
-    
+
     @ReactMethod
     public Boolean getDeviceMicrophoneAccessibility() {
         // Assume thisActivity is the current activity
@@ -655,6 +658,8 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
             returnValue = true;
         }
 
+        return returnValue;
+    }
 
     @ReactMethod
     public Boolean getDeviceFileReadAccessibility() {
