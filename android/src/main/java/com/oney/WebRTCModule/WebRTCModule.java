@@ -628,71 +628,55 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public Boolean getDeviceCameraAccessibility() {
+    public void getDeviceCameraAccessibility(final Callback callback) {
         // Assume thisActivity is the current activity
-        Boolean returnValue = true;
-
         int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
                 Manifest.permission.CAMERA);
 
         if(PackageManager.PERMISSION_DENIED == permissionCheck){
-            returnValue = false;
+            callback.invoke(false);
         }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
-            returnValue = true;
+            callback.invoke(true);
         }
-
-        return returnValue;
     }
 
     @ReactMethod
-    public Boolean getDeviceMicrophoneAccessibility() {
+    public void getDeviceMicrophoneAccessibility(final Callback callback) {
         // Assume thisActivity is the current activity
-        Boolean returnValue = true;
-
         int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
                 Manifest.permission.RECORD_AUDIO);
 
         if(PackageManager.PERMISSION_DENIED == permissionCheck){
-            returnValue = false;
+            callback.invoke(false);
         }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
-            returnValue = true;
+            callback.invoke(true);
         }
-
-        return returnValue;
     }
 
     @ReactMethod
-    public Boolean getDeviceFileReadAccessibility() {
+    public void getDeviceFileReadAccessibility(final Callback callback) {
         // Assume thisActivity is the current activity
-        Boolean returnValue = true;
-
         int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if(PackageManager.PERMISSION_DENIED == permissionCheck){
-            returnValue = false;
+            callback.invoke(false);
         }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
-            returnValue = true;
+            callback.invoke(true);
         }
-
-        return returnValue;
     }
 
     @ReactMethod
-    public Boolean getDeviceFileWriteAccessibility() {
+    public void getDeviceFileWriteAccessibility(final Callback callback) {
         // Assume thisActivity is the current activity
-        Boolean returnValue = true;
-
         int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if(PackageManager.PERMISSION_DENIED == permissionCheck){
-            returnValue = false;
+            callback.invoke(false);
         }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
-            returnValue = true;
+            callback.invoke(true);
         }
-
-        return returnValue;
     }
 
     @ReactMethod
