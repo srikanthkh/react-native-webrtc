@@ -253,6 +253,19 @@ RCT_EXPORT_METHOD(peerConnectionClose:(nonnull NSNumber *)objectID)
     [self.peerConnections removeObjectForKey:objectID];
 }
 
+RCT_EXPORT_METHOD(closeAllPeerConnections)
+{
+    if (self.peerConnections.count > 0) {
+        
+        for (NSNumber *key in self.peerConnections) {
+            RTCPeerConnection *peerConnection = [self.peerConnections objectForKey:key];
+            [peerConnection close];
+        }
+        
+        [self.peerConnections removeAllObjects];
+    }
+}
+
 RCT_EXPORT_METHOD(peerConnectionGetStats:(nonnull NSNumber *)trackID objectID:(nonnull NSNumber *)objectID callback:(RCTResponseSenderBlock)callback)
 {
     RTCMediaStreamTrack *track = nil;
