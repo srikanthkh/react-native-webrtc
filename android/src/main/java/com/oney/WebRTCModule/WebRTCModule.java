@@ -584,7 +584,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public String getDeviceCameraAccessibility() {
+    public String getDeviceCameraAccessibilityOLD() {
         String cameraStatus = new String("cameraStatus_Authorized");
         Camera camera = null;
         try {
@@ -598,7 +598,7 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public String getDeviceMicrophoneAccessibility() {
+    public String getDeviceMicrophoneAccessibilityOLD() {
         String microphoneStatus = new String("microphoneStatus_Authorized");
         AudioRecord recorder =new AudioRecord(
                 MediaRecorder.AudioSource.MIC, 44100,
@@ -622,6 +622,72 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
             recorder = null;
         }
         return microphoneStatus;
+    }
+
+    @ReactMethod
+    public Boolean getDeviceCameraAccessibility() {
+        // Assume thisActivity is the current activity
+        Boolean returnValue = true;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
+                Manifest.permission.CAMERA);
+
+        if(PackageManager.PERMISSION_DENIED == permissionCheck){
+            returnValue = false;
+        }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+    
+    @ReactMethod
+    public Boolean getDeviceMicrophoneAccessibility() {
+        // Assume thisActivity is the current activity
+        Boolean returnValue = true;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
+                Manifest.permission.RECORD_AUDIO);
+
+        if(PackageManager.PERMISSION_DENIED == permissionCheck){
+            returnValue = false;
+        }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
+            returnValue = true;
+        }
+
+
+    @ReactMethod
+    public Boolean getDeviceFileReadAccessibility() {
+        // Assume thisActivity is the current activity
+        Boolean returnValue = true;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if(PackageManager.PERMISSION_DENIED == permissionCheck){
+            returnValue = false;
+        }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+
+    @ReactMethod
+    public Boolean getDeviceFileWriteAccessibility() {
+        // Assume thisActivity is the current activity
+        Boolean returnValue = true;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this.getCurrentActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if(PackageManager.PERMISSION_DENIED == permissionCheck){
+            returnValue = false;
+        }else if(PackageManager.PERMISSION_GRANTED == permissionCheck) {
+            returnValue = true;
+        }
+
+        return returnValue;
     }
 
     @ReactMethod
