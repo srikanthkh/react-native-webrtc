@@ -683,8 +683,9 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     public void releaseCameraAndMicroPhone() {
 
         if (mMediaStreams != null) {
-            while (mMediaStreamId >= 0) {
-                MediaStream mediaStream = mMediaStreams.get(mMediaStreamId);
+            for(int i = 0; i < mMediaStreams.size(); i++){
+                int mediaStreamIndex = mMediaStreams.indexOfKey(i);
+                MediaStream mediaStream = mMediaStreams.valueAt(mediaStreamIndex);
                 LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
                 LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
 
@@ -706,14 +707,6 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
                 }
             }
         }
-
-
-        for (int i = 0; i < mPeerConnections.size(); i++) {
-            int index = mPeerConnections.keyAt(i);
-            PeerConnection p = mPeerConnections.valueAt(index);
-            p.dispose();
-        }
-    }
 
 
     public static void changeBandwidthResolution(int bandWidth) {
