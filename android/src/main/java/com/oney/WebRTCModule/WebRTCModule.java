@@ -682,37 +682,42 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void releaseCameraAndMicroPhone() {
 
+       for (int i = 0; i < mPeerConnections.size(); i++) {
+           int index = mPeerConnections.keyAt(i);
+           PeerConnection p = mPeerConnections.valueAt(index);
+           p.close();
+           p.dispose();
+       }
+
         if (mMediaStreams != null) {
-            while (mMediaStreamId >= 0) {
-                MediaStream mediaStream = mMediaStreams.get(mMediaStreamId);
-                LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
-                LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
+           for(int i = 0; i < mMediaStreams.size(); i++){
+               int mediaStreamIndex = mMediaStreams.keyAt(i);
+               MediaStream mediaStream = mMediaStreams.valueAt(mediaStreamIndex);
 
-                if (videoTracks != null) {
-                    for (VideoTrack v : videoTracks) {
-                        int trackIndex = mMediaStreamTracks.indexOfValue(v);
-                        v.dispose();
-                        mMediaStreamTracks.remove(trackIndex);
-                        mediaStream.removeTrack(v);
-                    }
-                }
-                if (audioTracks != null) {
-                    for (AudioTrack a : audioTracks) {
-                        int trackIndex = mMediaStreamTracks.indexOfValue(a);
-                        a.dispose();
-                        mMediaStreamTracks.remove(trackIndex);
-                        mediaStream.removeTrack(a);
-                    }
-                }
-            }
-        }
+               if(mediaStream != null) {
+                   LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
+                   LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
 
-
-        for (int i = 0; i < mPeerConnections.size(); i++) {
-            int index = mPeerConnections.keyAt(i);
-            PeerConnection p = mPeerConnections.valueAt(index);
-            p.dispose();
-        }
+                   if (videoTracks != null) {
+                       for (VideoTrack v : videoTracks) {
+                           int trackIndex = mMediaStreamTracks.indexOfValue(v);
+                           v.dispose();
+                           mMediaStreamTracks.remove(trackIndex);
+                           mediaStream.removeTrack(v);
+                       }
+                   }
+                   if (audioTracks != null) {
+                       for (AudioTrack a : audioTracks) {
+                           int trackIndex = mMediaStreamTracks.indexOfValue(a);
+                           a.dispose();
+                           mMediaStreamTracks.remove(trackIndex);
+                           mediaStream.removeTrack(a);
+                       }
+                   }
+                   mediaStream.dispose();
+               }
+           }
+       }
     }
 
 
