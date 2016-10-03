@@ -682,30 +682,16 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void releaseCameraAndMicroPhone() {
 
-        if (mMediaStreams != null) {
-            for(int i = 0; i < mMediaStreams.size(); i++){
-                int mediaStreamIndex = mMediaStreams.indexOfKey(i);
-                MediaStream mediaStream = mMediaStreams.valueAt(mediaStreamIndex);
-                LinkedList<VideoTrack> videoTracks = mediaStream.videoTracks;
-                LinkedList<AudioTrack> audioTracks = mediaStream.audioTracks;
-
-                if (videoTracks != null) {
-                    for (VideoTrack v : videoTracks) {
-                        int trackIndex = mMediaStreamTracks.indexOfValue(v);
-                        v.dispose();
-                        mMediaStreamTracks.remove(trackIndex);
-                        mediaStream.removeTrack(v);
-                    }
-                }
-                if (audioTracks != null) {
-                    for (AudioTrack a : audioTracks) {
-                        int trackIndex = mMediaStreamTracks.indexOfValue(a);
-                        a.dispose();
-                        mMediaStreamTracks.remove(trackIndex);
-                        mediaStream.removeTrack(a);
-                    }
-                }
-            }
+       	this.currentVideoCapturerAndroid.dispose();
+       for (int i = 0; i < mPeerConnections.size(); i++) {
+           int index = mPeerConnections.keyAt(i);
+           PeerConnection p = mPeerConnections.valueAt(index);
+           if(p != null){
+               p.close();
+               p.dispose();
+               mPeerConnections.delete(i);
+           }
+       }
         }
 
 
