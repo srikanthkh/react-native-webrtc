@@ -239,6 +239,12 @@ RCT_EXPORT_METHOD(peerConnectionAddICECandidate:(NSDictionary*)candidateJSON obj
     callback(@[@(result)]);
     
     [self checkAudioOutputRoute];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self
+           selector:@selector(routeChanged:)
+               name:AVAudioSessionRouteChangeNotification
+             object:nil];
 }
 
 - (void)checkAudioOutputRoute
@@ -256,6 +262,10 @@ RCT_EXPORT_METHOD(peerConnectionAddICECandidate:(NSDictionary*)candidateJSON obj
             return YES;
     }
     return NO;
+}
+
+- (void)routeChanged:(NSNotification *)notification {
+    [self checkAudioOutputRoute];
 }
 
 RCT_EXPORT_METHOD(peerConnectionClose:(nonnull NSNumber *)objectID)
