@@ -238,8 +238,24 @@ RCT_EXPORT_METHOD(peerConnectionAddICECandidate:(NSDictionary*)candidateJSON obj
     NSLog(@"addICECandidateresult:%i, %@", result, candidate);
     callback(@[@(result)]);
     
-    NSError *error;
-    [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    [self checkAudioOutputRoute];
+}
+
+- (void)checkAudioOutputRoute
+{
+    if (![self isEarPhoneConnected]) {
+        NSError *error;
+        [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    }
+}
+
+- (BOOL)isEarPhoneConnected {
+    AVAudioSessionRouteDescription* route = [[AVAudioSession sharedInstance] currentRoute];
+    for (AVAudioSessionPortDescription* desc in [route outputs]) {
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+            return YES;
+    }
+    return NO;
 }
 
 RCT_EXPORT_METHOD(peerConnectionClose:(nonnull NSNumber *)objectID)
